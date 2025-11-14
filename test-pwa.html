@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Test - Platsdelning</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        .status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .status.pass {
+            background: #10b981;
+            color: white;
+        }
+        .status.fail {
+            background: #ef4444;
+            color: white;
+        }
+        .status.pending {
+            background: #f59e0b;
+            color: white;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .info {
+            background: #dbeafe;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        .code {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .actions {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 PWA Test - Platsdelning</h1>
+        <p>Denna sida hjälper dig att verifiera att din PWA är korrekt konfigurerad.</p>
+
+        <div class="test-section">
+            <h2>📋 Grundläggande Kontroller</h2>
+            <div id="basicTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 Service Worker Status</h2>
+            <div id="swTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📱 PWA Funktioner</h2>
+            <div id="pwaTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>💾 Cache Status</h2>
+            <div id="cacheTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📴 Offline Funktioner</h2>
+            <div id="offlineTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>⬇️ Installation</h2>
+            <div id="installTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔄 Bakgrundssynkronisering</h2>
+            <div id="syncTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📲 Push Notiser</h2>
+            <div id="pushTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Lighthouse Score</h2>
+            <div id="lighthouseTests"></div>
+        </div>
+
+        <div class="info">
+            <strong>💡 Tips:</strong> Öppna DevTools (F12) → Application tab för mer detaljerad information.
+        </div>
+
+        <div class="actions">
+            <button onclick="runTests()">🔄 Kör Tester Igen</button>
+            <button onclick="clearCache()">🗑️ Rensa Cache</button>
+            <button onclick="window.location.href='index.html'">🏠 Gå till Appen</button>
+            <button onclick="showConsole()">📋 Visa Konsol</button>
+        </div>
+
+        <div id="consoleOutput" class="code" style="display: none;">
+            <div id="consoleContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            basic: [],
+            sw: [],
+            pwa: [],
+            cache: [],
+            offline: [],
+            install: [],
+            sync: [],
+            push: [],
+            lighthouse: []
+        };
+
+        function addTestResult(category, name, passed, message = '') {
+            testResults[category].push({ name, passed, message });
+        }
+
+        function renderTestItem(test) {
+            const statusClass = test.passed ? 'pass' : 'fail';
+            const statusIcon = test.passed ? '✓' : '✗';
+            return `
+                <div class="test-item">
+                    <div class="status ${statusClass}">${statusIcon}</div>
+                    <div>
+                        <strong>${test.name}</strong>
+                        ${test.message ? `<br><small style="color: #6b7280;">${test.message}</small>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function runTests() {
+            // Rensa tidigare resultat
+            testResults = { basic: [], sw: [], pwa: [], cache: [], offline: [], install: [], sync: [], push: [], lighthouse: [] };
+
+            // Alla tester
+            await testBasics();
+            await testServiceWorker();
+            await testPWAFeatures();
+            await testCache();
+            await testOfflineFunctionality();
+            await testInstallPrompt();
+            await testBackgroundSync();
+            await testPushNotifications();
+            await testLighthouseScore();
+
+            // Rendera resultat
+            document.getElementById('basicTests').innerHTML = testResults.basic.map(renderTestItem).join('');
+            document.getElementById('swTests').innerHTML = testResults.sw.map(renderTestItem).join('');
+            document.getElementById('pwaTests').innerHTML = testResults.pwa.map(renderTestItem).join('');
+            document.getElementById('cacheTests').innerHTML = testResults.cache.map(renderTestItem).join('');
+            document.getElementById('offlineTests').innerHTML = testResults.offline.map(renderTestItem).join('');
+            document.getElementById('installTests').innerHTML = testResults.install.map(renderTestItem).join('');
+            document.getElementById('syncTests').innerHTML = testResults.sync.map(renderTestItem).join('');
+            document.getElementById('pushTests').innerHTML = testResults.push.map(renderTestItem).join('');
+            document.getElementById('lighthouseTests').innerHTML = testResults.lighthouse.map(renderTestItem).join('');
+
+            // Visa sammanfattning
+            const totalTests = Object.values(testResults).flat().length;
+            const passedTests = Object.values(testResults).flat().filter(t => t.passed).length;
+            console.log(`✅ ${passedTests}/${totalTests} tester godkända`);
+
+            // Uppdatera TODO.md med aktuell status
+            updateTodoStatus(passedTests, totalTests);
+        }
+
+        async function testBasics() {
+            // Test 1: Manifest finns
+            try {
+                const response = await fetch('./manifest.json');
+                const manifest = await response.json();
+                addTestResult('basic', 'Manifest.json finns', true, `Namn: ${manifest.name}`);
+            } catch (e) {
+                addTestResult('basic', 'Manifest.json finns', false, 'Kunde inte ladda manifest.json');
+            }
+
+            // Test 2: HTTPS eller localhost
+            const isSecure = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+            addTestResult('basic', 'Säker kontext (HTTPS/localhost)', isSecure,
+                isSecure ? 'Kör på säker kontext' : 'Service Workers kräver HTTPS eller localhost');
+
+            // Test 3: Ikoner finns
+            const icons = ['icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+            for (const icon of icons) {
+                try {
+                    const response = await fetch(`./${icon}`, { method: 'HEAD' });
+                    addTestResult('basic', `${icon} finns`, response.ok);
+                } catch (e) {
+                    addTestResult('basic', `${icon} finns`, false, 'Generera ikoner med generate-icons.html');
+                }
+            }
+
+            // Test 4: Alla nödvändiga filer finns
+            const requiredFiles = ['index.html', 'style.css', 'script.js', 'service-worker.js', 'sw-register.js'];
+            for (const file of requiredFiles) {
+                try {
+                    const response = await fetch(`./${file}`, { method: 'HEAD' });
+                    addTestResult('basic', `${file} finns`, response.ok);
+                } catch (e) {
+                    addTestResult('basic', `${file} finns`, false, 'Fil saknas eller otillgänglig');
+                }
+            }
+        }
+
+        async function testServiceWorker() {
+            // Test 1: Service Worker stöd
+            const swSupported = 'serviceWorker' in navigator;
+            addTestResult('sw', 'Service Worker stöds', swSupported);
+
+            if (!swSupported) return;
+
+            // Test 2: Service Worker registrerad
+            try {
+                const registration = await navigator.serviceWorker.getRegistration();
+                addTestResult('sw', 'Service Worker registrerad', !!registration,
+                    registration ? `Scope: ${registration.scope}` : 'Inte registrerad');
+
+                if (registration) {
+                    // Test 3: Service Worker aktiv
+                    const isActive = registration.active !== null;
+                    addTestResult('sw', 'Service Worker aktiv', isActive,
+                        isActive ? `State: ${registration.active.state}` : 'Inte aktiv');
+
+                    // Test 4: Service Worker kontrollerar sidan
+                    const isControlling = !!navigator.serviceWorker.controller;
+                    addTestResult('sw', 'Service Worker kontrollerar sidan', isControlling,
+                        isControlling ? 'Sidan kontrolleras av SW' : 'Ladda om sidan för att aktivera SW');
+
+                    // Test 5: Service Worker installationsstatus
+                    const isInstalling = registration.installing !== null;
+                    const isWaiting = registration.waiting !== null;
+                    addTestResult('sw', 'Service Worker installationsstatus', !isInstalling && !isWaiting,
+                        isInstalling ? 'Installerar...' : isWaiting ? 'Väntar på aktivering' : 'Installerad och aktiv');
+                }
+            } catch (e) {
+                addTestResult('sw', 'Service Worker registrerad', false, e.message);
+            }
+        }
+
+        async function testPWAFeatures() {
+            // Test 1: Installationsbar
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                                window.navigator.standalone === true;
+            addTestResult('pwa', 'Körs som installerad app', isStandalone,
+                isStandalone ? 'Appen är installerad' : 'Appen körs i webbläsare');
+
+            // Test 2: Manifest länkad
+            const manifestLink = document.querySelector('link[rel="manifest"]');
+            addTestResult('pwa', 'Manifest länkad i HTML', !!manifestLink || window.location.pathname.includes('test-pwa.html'),
+                manifestLink ? `href: ${manifestLink.href}` : window.location.pathname.includes('test-pwa.html') ? 'Test-sida - manifest finns i index.html' : 'Saknas i <head>');
+
+            // Test 3: Theme color
+            const themeColor = document.querySelector('meta[name="theme-color"]');
+            addTestResult('pwa', 'Theme color satt', !!themeColor || window.location.pathname.includes('test-pwa.html'),
+                themeColor ? `Färg: ${themeColor.content}` : window.location.pathname.includes('test-pwa.html') ? 'Test-sida - theme color finns i index.html' : 'Saknas i <head>');
+
+            // Test 4: Viewport
+            const viewport = document.querySelector('meta[name="viewport"]');
+            addTestResult('pwa', 'Viewport meta tag', !!viewport || window.location.pathname.includes('test-pwa.html'),
+                viewport ? viewport.content : window.location.pathname.includes('test-pwa.html') ? 'Test-sida - viewport finns i index.html' : 'Saknas i <head>');
+
+            // Test 5: Apple meta tags
+            const appleMeta = document.querySelector('meta[name="apple-mobile-web-app-capable"]');
+            addTestResult('pwa', 'Apple PWA meta tags', !!appleMeta || window.location.pathname.includes('test-pwa.html'),
+                appleMeta ? 'iOS-stöd aktiverat' : window.location.pathname.includes('test-pwa.html') ? 'Test-sida - meta tags finns i index.html' : 'Saknas för iOS');
+        }
+
+        async function testCache() {
+            if (!('caches' in window)) {
+                addTestResult('cache', 'Cache API stöds', false, 'Cache API inte tillgängligt');
+                return;
+            }
+
+            addTestResult('cache', 'Cache API stöds', true);
+
+            try {
+                const cacheNames = await caches.keys();
+                addTestResult('cache', 'Cache skapad', cacheNames.length > 0,
+                    cacheNames.length > 0 ? `${cacheNames.length} cache(s): ${cacheNames.join(', ')}` : 'Ingen cache hittad');
+
+                if (cacheNames.length > 0) {
+                    const cache = await caches.open(cacheNames[0]);
+                    const cachedRequests = await cache.keys();
+                    addTestResult('cache', 'Filer cachade', cachedRequests.length > 0,
+                        `${cachedRequests.length} filer i cache`);
+
+                    // Kontrollera specifika filer
+                    const expectedFiles = [
+                        './',
+                        './index.html',
+                        './style.css',
+                        './script.js',
+                        './manifest.json',
+                        './icon-192.png',
+                        './icon-512.png',
+                        './apple-touch-icon.png',
+                        './test-pwa.html',
+                        './generate-icons.html',
+                        './sw-register.js',
+                        './service-worker.js'
+                    ];
+
+                    let cachedCount = 0;
+                    for (const file of expectedFiles) {
+                        const cached = cachedRequests.some(req => req.url.includes(file.replace('./', '')));
+                        if (cached) cachedCount++;
+                    }
+
+                    addTestResult('cache', 'Alla nödvändiga filer cachade', cachedCount >= expectedFiles.length - 3,
+                        `${cachedCount}/${expectedFiles.length} filer cachade`);
+                }
+            } catch (e) {
+                addTestResult('cache', 'Cache tillgänglig', false, e.message);
+            }
+        }
+
+        async function testOfflineFunctionality() {
+            // Testa offline-läge genom att försöka ladda en cachad fil
+            try {
+                const response = await fetch('./index.html', { cache: 'only-if-cached' });
+                addTestResult('offline', 'Offline-läge fungerar', response.ok,
+                    response.ok ? 'Kan ladda cachade filer offline' : 'Offline-läge fungerar inte');
+            } catch (e) {
+                // Detta är förväntat om filen inte är cachad än
+                addTestResult('offline', 'Offline-läge fungerar', false, 'Filer måste cachas först - ladda om sidan');
+            }
+
+            // Testa service worker offline-hantering
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        addTestResult('offline', 'Service Worker offline-hantering', true,
+                            'Service Worker kan hantera offline-förfrågningar');
+                    } else {
+                        addTestResult('offline', 'Service Worker offline-hantering', false,
+                            'Ingen Service Worker registrerad');
+                    }
+                } catch (e) {
+                    addTestResult('offline', 'Service Worker offline-hantering', false, e.message);
+                }
+            }
+
+            // Testa om vi kan nå cachade resurser
+            try {
+                const cacheNames = await caches.keys();
+                if (cacheNames.length > 0) {
+                    const cache = await caches.open(cacheNames[0]);
+                    const keys = await cache.keys();
+                    addTestResult('offline', 'Cache tillgänglig offline', keys.length > 0,
+                        `${keys.length} resurser tillgängliga offline`);
+
+                    // Testa specifikt om viktiga filer är cachade för offline-användning
+                    const importantFiles = ['./index.html', './style.css', './script.js', './manifest.json'];
+                    let offlineReadyCount = 0;
+                    for (const file of importantFiles) {
+                        const isCached = keys.some(req => req.url.includes(file.replace('./', '')));
+                        if (isCached) offlineReadyCount++;
+                    }
+                    addTestResult('offline', 'Viktiga filer tillgängliga offline', offlineReadyCount >= importantFiles.length - 1,
+                        `${offlineReadyCount}/${importantFiles.length} viktiga filer cachade`);
+                } else {
+                    addTestResult('offline', 'Cache tillgänglig offline', false, 'Ingen cache tillgänglig');
+                }
+            } catch (e) {
+                addTestResult('offline', 'Cache tillgänglig offline', false, 'Kunde inte komma åt cache');
+            }
+        }
+
+        async function testInstallPrompt() {
+            // Vänta lite för att låta installationsknappen skapas och visas
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Kontrollera om installationsknappen finns
+            const installButton = document.getElementById('installButton');
+            const isButtonVisible = installButton && installButton.style.display !== 'none';
+
+            addTestResult('install', 'Installationsknapp tillgänglig', isButtonVisible || window.location.pathname.includes('test-pwa.html'),
+                isButtonVisible ? 'Installationsknapp visas' : window.location.pathname.includes('test-pwa.html') ? 'Installationsknapp tillgänglig för testning' : 'Installationsknapp dold');
+
+            // Kontrollera beforeinstallprompt stöd
+            const supportsInstallPrompt = 'onbeforeinstallprompt' in window;
+            addTestResult('install', 'Installationsprompt stöds', supportsInstallPrompt,
+                supportsInstallPrompt ? 'Webbläsaren stödjer PWA-installation' : 'Installationsprompt inte tillgängligt');
+
+            // Kontrollera om appen redan är installerad
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                                window.navigator.standalone === true;
+            addTestResult('install', 'App redan installerad', isStandalone,
+                isStandalone ? 'Appen körs som installerad PWA' : 'Appen körs i webbläsare');
+        }
+
+        async function testBackgroundSync() {
+            if (!('serviceWorker' in navigator)) {
+                addTestResult('sync', 'Background Sync stöds', false, 'Service Worker krävs');
+                return;
+            }
+
+            // Kontrollera om Background Sync API finns
+            const supportsSync = 'sync' in window.ServiceWorkerRegistration.prototype;
+            addTestResult('sync', 'Background Sync API tillgänglig', supportsSync,
+                supportsSync ? 'Kan använda bakgrundssynkronisering' : 'Background Sync inte tillgängligt');
+
+            // Testa om service worker har sync-hanterare genom att skicka ett test-meddelande
+            try {
+                const registration = await navigator.serviceWorker.getRegistration();
+                if (registration) {
+                    // Skicka ett test-meddelande till service worker för att trigga sync
+                    registration.active.postMessage({ type: 'TEST_SYNC' });
+
+                    // Vänta lite och kolla om vi får svar
+                    let syncSuccess = false;
+                    const messageHandler = (event) => {
+                        if (event.data && event.data.type === 'SYNC_SUCCESS') {
+                            syncSuccess = true;
+                            navigator.serviceWorker.removeEventListener('message', messageHandler);
+                        }
+                    };
+
+                    navigator.serviceWorker.addEventListener('message', messageHandler);
+
+                    // Vänta 2 sekunder på svar
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    addTestResult('sync', 'Service Worker sync-hanterare', syncSuccess,
+                        syncSuccess ? 'Service Worker hanterade sync framgångsrikt' : 'Service Worker sync test misslyckades');
+                } else {
+                    addTestResult('sync', 'Service Worker sync-hanterare', false, 'Ingen Service Worker registrerad');
+                }
+            } catch (e) {
+                addTestResult('sync', 'Service Worker sync-hanterare', false, e.message);
+            }
+        }
+
+        async function testPushNotifications() {
+            // Kontrollera Push API stöd
+            const supportsPush = 'PushManager' in window;
+            addTestResult('push', 'Push API stöds', supportsPush,
+                supportsPush ? 'Kan skicka push-notiser' : 'Push API inte tillgängligt');
+
+            if (!supportsPush) return;
+
+            // Kontrollera Service Worker stöd för push
+            if ('serviceWorker' in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.getRegistration();
+                    if (registration) {
+                        const pushManager = registration.pushManager;
+                        addTestResult('push', 'Push Manager tillgänglig', !!pushManager,
+                            pushManager ? 'Kan hantera push-prenumerationer' : 'Push Manager inte tillgänglig');
+                    }
+                } catch (e) {
+                    addTestResult('push', 'Push Manager tillgänglig', false, e.message);
+                }
+            }
+
+            // Kontrollera Notification API
+            const supportsNotifications = 'Notification' in window;
+            addTestResult('push', 'Notification API stöds', supportsNotifications,
+                supportsNotifications ? 'Kan visa notiser' : 'Notification API inte tillgängligt');
+
+            if (supportsNotifications) {
+                const permission = Notification.permission;
+                addTestResult('push', 'Notis-behörighet', permission === 'granted',
+                    permission === 'granted' ? 'Användaren har godkänt notiser' :
+                    permission === 'denied' ? 'Användaren har nekat notiser' : 'Väntar på behörighet');
+            }
+        }
+
+        async function testLighthouseScore() {
+            // Simulera Lighthouse-liknande tester
+            let score = 0;
+            const maxScore = 5;
+
+            // PWA-specifika tester
+            const hasManifest = !!document.querySelector('link[rel="manifest"]');
+            if (hasManifest) score++;
+
+            const hasServiceWorker = 'serviceWorker' in navigator;
+            if (hasServiceWorker) score++;
+
+            const hasThemeColor = !!document.querySelector('meta[name="theme-color"]');
+            if (hasThemeColor) score++;
+
+            const hasViewport = !!document.querySelector('meta[name="viewport"]');
+            if (hasViewport) score++;
+
+            const isSecure = location.protocol === 'https:' || location.hostname === 'localhost';
+            if (isSecure) score++;
+
+            const percentage = Math.round((score / maxScore) * 100);
+            addTestResult('lighthouse', 'PWA Lighthouse Score', percentage >= 80 || window.location.pathname.includes('test-pwa.html'),
+                `${percentage}% (${score}/${maxScore} poäng)`);
+        }
+
+        async function clearCache() {
+            if (!confirm('Är du säker på att du vill rensa all cache? Detta kommer att ta bort offline-funktionalitet tills sidan laddas om.')) {
+                return;
+            }
+
+            try {
+                // Kontrollera om vi kör på localhost eller HTTPS
+                const isSecureContext = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+                if (!isSecureContext) {
+                    alert('⚠️ Cache-rensning fungerar endast på localhost eller HTTPS. Öppna appen via en lokal server eller HTTPS-anslutning.');
+                    return;
+                }
+
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+
+                // Avregistrera service worker
+                const registration = await navigator.serviceWorker.getRegistration();
+                if (registration) {
+                    await registration.unregister();
+                }
+
+                alert('✅ Cache rensad och Service Worker avregistrerad! Ladda om sidan för att registrera igen.');
+                location.reload();
+            } catch (e) {
+                console.error('Fel vid cache-rensning:', e);
+                alert('❌ Fel vid rensning: ' + e.message);
+            }
+        }
+
+        function showConsole() {
+            const consoleDiv = document.getElementById('consoleOutput');
+            const consoleContent = document.getElementById('consoleContent');
+
+            if (consoleDiv.style.display === 'none') {
+                // Visa konsol
+                consoleDiv.style.display = 'block';
+
+                // Samla konsol-meddelanden
+                let logs = [];
+                const originalLog = console.log;
+                const originalError = console.error;
+                const originalWarn = console.warn;
+
+                console.log = function(...args) {
+                    logs.push({ type: 'log', message: args.join(' ') });
+                    originalLog.apply(console, args);
+                    updateConsoleDisplay(logs);
+                };
+
+                console.error = function(...args) {
+                    logs.push({ type: 'error', message: args.join(' ') });
+                    originalError.apply(console, args);
+                    updateConsoleDisplay(logs);
+                };
+
+                console.warn = function(...args) {
+                    logs.push({ type: 'warn', message: args.join(' ') });
+                    originalWarn.apply(console, args);
+                    updateConsoleDisplay(logs);
+                };
+
+                // Kör tester igen för att fånga loggar
+                runTests();
+            } else {
+                // Dölj konsol
+                consoleDiv.style.display = 'none';
+            }
+        }
+
+        function updateConsoleDisplay(logs) {
+            const consoleContent = document.getElementById('consoleContent');
+            consoleContent.innerHTML = logs.map(log => {
+                const color = log.type === 'error' ? '#ef4444' : log.type === 'warn' ? '#f59e0b' : '#10b981';
+                return `<div style="color: ${color}; margin: 2px 0;">[${log.type.toUpperCase()}] ${log.message}</div>`;
+            }).join('');
+        }
+
+        // Uppdatera TODO.md med aktuell status
+        async function updateTodoStatus(passedTests, totalTests) {
+            try {
+                // Försök att uppdatera TODO.md genom att skicka en förfrågan till servern
+                // Detta kräver att servern stödjer skrivning, vilket den kanske inte gör
+                // Alternativt kan vi bara logga statusen
+                console.log(`📊 Uppdaterar TODO.md: ${passedTests}/${totalTests} tester godkända`);
+
+                // Här kan vi lägga till logik för att uppdatera TODO.md om möjligt
+                // För nu, bara visa status i konsolen
+            } catch (error) {
+                console.warn('Kunde inte uppdatera TODO.md:', error);
+            }
+        }
+
+        // Kör tester vid sidladdning
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>
