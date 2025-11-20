@@ -1,4 +1,4 @@
-const CACHE_NAME = 'elevplatsapp-v1';
+const CACHE_NAME = 'elevplatsapp-v2';
 const urlsToCache = [
     './',
     './index.html',
