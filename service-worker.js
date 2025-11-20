@@ -1,27 +1,26 @@
-const CACHE_NAME = 'platsdelning-v5';
+const CACHE_NAME = 'elevplatsapp-v1';
 const urlsToCache = [
     './',
     './index.html',
-    './index-critical.html',
-    './critical.html',
-    './style.min.css',
+    './admin.html',
     './style.css',
-    './script.min.js',
-    './script.js',
+    './js/main.js',
+    './js/app.js',
+    './js/classroom.js',
+    './js/data.js',
+    './js/events.js',
+    './js/placement.js',
+    './js/state.js',
+    './js/students.js',
+    './js/ui.js',
+    './js/statistics.js',
+    './js/admin.js',
     './manifest.json',
     './favicon.ico',
     './icon-192.png',
     './icon-512.png',
     './apple-touch-icon.png',
-    './test-pwa.html',
-    './generate-icons.html',
-    './sw-register.js',
-    './service-worker.js',
-    './PWA-README.md',
-    './QUICK-START.md',
-    './lighthouse-report-final.json',
-    './lighthouse-report-optimized.json',
-    './lighthouse-report.json'
+    './sw-register.js'
 ];
 
 // Install Event - Cache resources

@@ -13,8 +13,8 @@
     <meta name="apple-mobile-web-app-title" content="Seat Randomizer">
 
     <!-- Preload critical resources for better performance -->
-    <link rel="preload" href="style.min.css" as="style">
-    <link rel="preload" href="script.min.js" as="script">
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="js/main.js" as="script">
     <link rel="preload" href="manifest.json" as="fetch">
     <link rel="preload" href="icon-192.png" as="image">
     <link rel="preload" href="icon-512.png" as="image">
@@ -31,8 +31,8 @@
     <!-- Manifest -->
     <link rel="manifest" href="manifest.json">
     
-    <link rel="stylesheet" href="style.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="style.min.css"></noscript>
+    <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="style.css"></noscript>
 </head>
 <body>
     <div class="container">
@@ -64,11 +64,14 @@
                 <button id="editStudentsButton">Redigera Elever</button>
                 <button id="drawButton">Placera Elever</button>
                 <button id="resetButton">Återställ</button>
-                <button id="lockButton" title="Lås placeringar">🔒</button>
-                <button id="exportButton" title="Exportera elevdata">💾</button>
-                <button id="importButton" title="Importera elevdata">📂</button>
-                <button id="toggleInfoButton" title="Dölj/visa känslig information">👁️</button>
-                <button id="fullscreenButton" title="Fullscreen-läge (Shift+F)">⛶</button>
+                <button id="lockButton" title="Lås placeringar"><span aria-hidden="true">🔒</span></button>
+                <button id="saveLayoutButton" title="Spara placering"><span aria-hidden="true">💾</span></button>
+                <button id="loadLayoutButton" title="Ladda placering"><span aria-hidden="true">📂</span></button>
+                <button id="exportButton" title="Exportera elevdata"><span aria-hidden="true">📤</span></button>
+                <button id="importButton" title="Importera elevdata"><span aria-hidden="true">📥</span></button>
+                <button id="toggleInfoButton" title="Dölj/visa känslig information"><span aria-hidden="true">👁️</span></button>
+                <button id="themeButton" title="Byt tema"><span aria-hidden="true">🌙</span></button>
+                <button id="fullscreenButton" title="Fullscreen-läge (Shift+F)"><span aria-hidden="true">⛶</span></button>
             </div>
             <input type="file" id="importFileInput" accept=".json" style="display: none;">
         </div>
@@ -125,9 +128,24 @@
         </div>
     </div>
 
-    <script src="script.min.js" defer></script>
+    <script type="module" src="js/main.js"></script>
 
     <!-- PWA Service Worker Registration -->
     <script src="sw-register.js" defer></script>
+
+    <!-- Umami Analytics -->
+    <!-- 
+    Instruktioner för att aktivera Umami Analytics:
+    1. Gå till https://cloud.umami.is och skapa ett gratis konto
+    2. Lägg till din website med domän: papagarn92.github.io (INTE /Elevplatsapp3)
+    3. Kopiera din tracking script URL och website ID
+    4. Ersätt "YOUR-SCRIPT-URL" med din script URL (t.ex. https://cloud.umami.is/script.js)
+    5. Ersätt "YOUR-WEBSITE-ID" med ditt website ID (en UUID)
+    6. Ta bort kommentarerna (<!-- och -->) runt script-taggen nedan
+    7. Se UMAMI-GUIDE.md för detaljerad guide
+    -->
+    <!-- 
+    <script async src="YOUR-SCRIPT-URL" data-website-id="YOUR-WEBSITE-ID"></script>
+    -->
 </body>
 </html>

@@ -1,0 +1,27 @@
+# Utvecklingsfiler som inte behövs på GitHub Pages
+script.js
+generate-icons.html
+test-pwa.html
+
+# Dokumentation som kan behållas lokalt men inte behövs på GitHub Pages
+# (Ta bort # om du vill exkludera dessa också)
+# PWA-README.md
+# QUICK-START.md
+
+# Node modules (om du använder npm)
+node_modules/
+
+# IDE-specifika filer
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS-specifika filer
+.DS_Store
+Thumbs.db
+
+# Backup-filer
+*.bak
+*.backup

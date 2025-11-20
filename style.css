@@ -724,6 +724,99 @@ button:focus-visible,
     outline-offset: 2px;
 }
 
+/* Screen reader only - completely hidden from visual display */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* =========================================== */
+/* === MÖRKT TEMA === */
+/* =========================================== */
+.dark-theme {
+    --primary: #818cf8;
+    --primary-dark: #6366f1;
+    --primary-light: #a5b4fc;
+    --success: #34d399;
+    --success-dark: #10b981;
+    --success-light: #6ee7b7;
+    --warning: #fbbf24;
+    --danger: #f87171;
+    --info: #60a5fa;
+
+    --bg-primary: #1e293b;
+    --bg-secondary: #334155;
+    --bg-tertiary: #475569;
+    --bg-accent: #1e40af;
+
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    --border: #475569;
+    --border-light: #334155;
+}
+
+.dark-theme body {
+    background:
+        radial-gradient(circle at 25% 75%, rgba(129, 140, 248, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(52, 211, 153, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.dark-theme .container {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.dark-theme .controls {
+    background: linear-gradient(145deg, rgba(51, 65, 85, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.dark-theme .desk {
+    background: linear-gradient(145deg, var(--bg-secondary) 0%, rgba(51, 65, 85, 0.8) 100%);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+.dark-theme .desk.drawn {
+    background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%);
+    color: white;
+    border-color: var(--success-dark);
+}
+
+.dark-theme #whiteboard {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border-color: #fcd34d;
+}
+
+.dark-theme .modal-content {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.dark-theme .student-row {
+    background: var(--bg-tertiary);
+    border-color: var(--border);
+}
+
+.dark-theme .student-row input,
+.dark-theme .student-row select,
+.dark-theme .controls select {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
 /* =========================================== */
 /* === RESPONSIV DESIGN FÖR MOBILA ENHETER === */
 /* =========================================== */

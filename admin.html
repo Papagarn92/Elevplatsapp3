@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Statistik</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: var(--bg-primary);
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-form input {
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-form button {
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stats-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stats-controls select,
+        .stats-controls button {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stats-controls select {
+            border: 2px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-card h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .heatmap-container {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .heatmap-container h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .heatmap {
+            display: grid;
+            gap: 2px;
+            min-width: 600px;
+        }
+
+        .heatmap-cell {
+            padding: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: var(--shadow-md);
+        }
+
+        .heatmap-header {
+            font-weight: 700;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .heatmap-row-header {
+            font-weight: 600;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .table-container {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .table-container h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .stats-table th,
+        .stats-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .stats-table th {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .stats-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .never-neighbors-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .never-neighbor-item {
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .settings-section {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 30px;
+        }
+
+        .settings-section h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+        }
+
+        .settings-form label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .settings-form input {
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Mörkt tema-stöd */
+        .dark-theme .login-container,
+        .dark-theme .stat-card,
+        .dark-theme .heatmap-container,
+        .dark-theme .table-container,
+        .dark-theme .settings-section {
+            background: var(--bg-secondary);
+            border-color: var(--border);
+        }
+
+        .dark-theme .stats-table th {
+            background: var(--bg-tertiary);
+        }
+
+        .dark-theme .stats-table tr:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .dark-theme .never-neighbor-item {
+            background: var(--bg-tertiary);
+        }
+
+        .dark-theme .heatmap-header,
+        .dark-theme .heatmap-row-header {
+            background: var(--bg-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <h2>🔐 Admin Login</h2>
+        <form class="login-form" id="loginForm">
+            <input type="password" id="passwordInput" placeholder="Ange lösenord" required>
+            <button type="submit">Logga in</button>
+            <p id="loginError" class="error-message hidden">Fel lösenord!</p>
+        </form>
+        <div style="margin-top: 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+            <p>Första gången? Ange ett nytt lösenord för att skapa admin-konto.</p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-container hidden">
+        <div class="stats-header">
+            <h1>📊 Statistik & Analys</h1>
+            <div class="stats-controls">
+                <select id="classSelectAdmin">
+                    <option value="">Välj klass</option>
+                </select>
+                <button id="exportStatsBtn">📥 Exportera</button>
+                <button id="clearHistoryBtn">🗑️ Rensa historik</button>
+                <button id="settingsBtn">⚙️ Inställningar</button>
+                <button id="logoutBtn">🚪 Logga ut</button>
+            </div>
+        </div>
+
+        <!-- Settings Section (Hidden by default) -->
+        <div id="settingsSection" class="settings-section hidden">
+            <h3>⚙️ Inställningar</h3>
+            <div class="settings-form">
+                <div>
+                    <label for="newPasswordInput">Ändra lösenord:</label>
+                    <input type="password" id="newPasswordInput" placeholder="Nytt lösenord">
+                </div>
+                <div>
+                    <label for="confirmPasswordInput">Bekräfta lösenord:</label>
+                    <input type="password" id="confirmPasswordInput" placeholder="Bekräfta nytt lösenord">
+                </div>
+                <div class="btn-group">
+                    <button id="savePasswordBtn" class="btn-confirm">Spara lösenord</button>
+                    <button id="cancelSettingsBtn" class="btn-cancel">Avbryt</button>
+                </div>
+                <p id="passwordMessage" class="error-message hidden"></p>
+            </div>
+        </div>
+
+        <!-- Overview Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Totalt antal placeringar</h3>
+                <div class="stat-value" id="totalPlacements">0</div>
+                <div class="stat-label">placeringar sparade</div>
+            </div>
+            <div class="stat-card">
+                <h3>Genomsnittlig grannfrekvens</h3>
+                <div class="stat-value" id="avgFrequency">0</div>
+                <div class="stat-label">gånger per elevpar</div>
+            </div>
+            <div class="stat-card">
+                <h3>Elever som aldrig suttit bredvid</h3>
+                <div class="stat-value" id="neverNeighborsCount">0</div>
+                <div class="stat-label">elevpar</div>
+            </div>
+        </div>
+
+        <!-- Heatmap -->
+        <div class="heatmap-container">
+            <h3>🔥 Grannfrekvens Heatmap</h3>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">
+                Visar hur många gånger varje elevpar har suttit bredvid varandra. 
+                Mörkare färg = fler gånger tillsammans.
+            </p>
+            <div id="heatmapGrid" class="heatmap"></div>
+        </div>
+
+        <!-- Detailed Table -->
+        <div class="table-container">
+            <h3>📋 Detaljerad statistik</h3>
+            <table class="stats-table" id="statsTable">
+                <thead>
+                    <tr>
+                        <th>Elev 1</th>
+                        <th>Elev 2</th>
+                        <th>Antal gånger</th>
+                    </tr>
+                </thead>
+                <tbody id="statsTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Never Neighbors -->
+        <div class="table-container">
+            <h3>❌ Elever som aldrig suttit bredvid varandra</h3>
+            <div id="neverNeighborsList" class="never-neighbors-list"></div>
+        </div>
+
+        <!-- Placement History -->
+        <div class="table-container">
+            <h3>📅 Placeringshistorik</h3>
+            <table class="stats-table" id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Datum & Tid</th>
+                        <th>Klassrum</th>
+                        <th>Antal elever</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module" src="js/admin.js"></script>
+
+    <!-- Umami Analytics -->
+    <!-- 
+    Instruktioner för att aktivera Umami Analytics:
+    1. Gå till https://cloud.umami.is och skapa ett gratis konto
+    2. Lägg till din website med domän: papagarn92.github.io (INTE /Elevplatsapp3)
+    3. Kopiera din tracking script URL och website ID
+    4. Ersätt "YOUR-SCRIPT-URL" med din script URL (t.ex. https://cloud.umami.is/script.js)
+    5. Ersätt "YOUR-WEBSITE-ID" med ditt website ID (en UUID)
+    6. Ta bort kommentarerna (<!-- och -->) runt script-taggen nedan
+    7. OBS: Använd SAMMA script URL och website ID som i index.html
+    8. Se UMAMI-GUIDE.md för detaljerad guide
+    -->
+    <!-- 
+    <script async src="YOUR-SCRIPT-URL" data-website-id="YOUR-WEBSITE-ID"></script>
+    -->
+</body>
+</html>
