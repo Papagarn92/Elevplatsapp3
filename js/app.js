@@ -3,7 +3,7 @@ import {
     lockoutUntil, lockoutLevel, MAX_UNLOCK_ATTEMPTS, LOCKOUT_DURATIONS,
     setAssignments, setIsLocked, setLockCode, setFailedUnlockAttempts,
     setLockoutUntil, setLockoutLevel, setCurrentClassroom, setCurrentClass, 
-    setStudentAttributes, currentClassroom, currentClass
+    setStudentAttributes, currentClassroom, currentClass, blockedSeats, setBlockedSeats
 } from './state.js';
 import { saveData, loadData, loadStudentAttributes, loadLockStatus, getStorageKey } from './data.js';
 import { renderDesks, updateUI, showConfirmModal, lockModal, unlockModal, lockCodeInput, unlockCodeInput, populateClassSelect, classroomSelect, classSelect, nameContainer, classroomLayout, sortSelect, loadTheme } from './ui.js';
@@ -48,6 +48,9 @@ export function assignAllAtOnce() {
         allSeats = Array.from({ length: maxSeats }, (_, i) => i + 1);
     }
 
+    // Filtrera bort blockerade platser
+    allSeats = allSeats.filter(id => !blockedSeats.has(id));
+
     // Använd smart placering om valt, annars vanlig sortering
     if (sortSelect.value === 'smart') {
         newAssignments = smartPlacement(currentStudentList, allSeats, config, maxSeats);
@@ -65,7 +68,10 @@ export function assignAllAtOnce() {
     }
     setAssignments(newAssignments);
 
-    saveData(currentClassroom, currentClass, { assignments: newAssignments });
+    saveData(currentClassroom, currentClass, {
+        assignments: newAssignments,
+        blockedSeats: Array.from(blockedSeats)
+    });
     
     // Spara i placeringshistorik för statistik
     savePlacementHistory(currentClassroom, currentClass, newAssignments);
@@ -78,6 +84,7 @@ export function resetSession() {
     showConfirmModal('Är du säker? Alla placeringar för denna sal och klass raderas.', () => {
         localStorage.removeItem(getStorageKey(currentClassroom, currentClass));
         setAssignments({});
+        setBlockedSeats(new Set());
         initializeSession();
     });
 }
@@ -86,6 +93,7 @@ export function initializeSession() {
     const config = CLASSROOM_CONFIG[currentClassroom];
     const savedData = loadData(currentClassroom, currentClass);
     setAssignments(savedData.assignments || {});
+    setBlockedSeats(savedData.blockedSeats || []);
 
     // Ladda elevattribut
     setStudentAttributes(loadStudentAttributes(currentClass));

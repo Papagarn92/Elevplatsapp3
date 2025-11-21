@@ -1,6 +1,7 @@
 export let currentClassroom = '';
 export let currentClass = '';
 export let assignments = {};
+export let blockedSeats = new Set();
 export let studentAttributes = {};
 export let sensitiveInfoVisible = true;
 export let isLocked = false;
@@ -23,6 +24,25 @@ export function setCurrentClass(value) {
 
 export function setAssignments(value) {
     assignments = value;
+}
+
+export function setBlockedSeats(value) {
+    // Convert array to Set if necessary (e.g. when loading from JSON)
+    if (Array.isArray(value)) {
+        blockedSeats = new Set(value);
+    } else {
+        blockedSeats = value;
+    }
+}
+
+export function toggleBlockedSeat(seatId) {
+    if (blockedSeats.has(seatId)) {
+        blockedSeats.delete(seatId);
+        return false; // Not blocked anymore
+    } else {
+        blockedSeats.add(seatId);
+        return true; // Blocked
+    }
 }
 
 export function setStudentAttributes(value) {
