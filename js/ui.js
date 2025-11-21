@@ -54,6 +54,25 @@ export const unlockConfirmButton = document.getElementById('unlockConfirmButton'
 export const unlockCancelButton = document.getElementById('unlockCancelButton');
 export const saveLayoutButton = document.getElementById('saveLayoutButton');
 export const loadLayoutButton = document.getElementById('loadLayoutButton');
+export const themeButton = document.getElementById('themeButton');
+
+export function loadTheme() {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+    }
+}
+
+export function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    if (document.body.classList.contains('dark-theme')) {
+        localStorage.setItem('theme', 'dark');
+    } else {
+        localStorage.setItem('theme', 'light');
+    }
+}
 
 export function populateClassroomSelect() {
     classroomSelect.innerHTML = '';

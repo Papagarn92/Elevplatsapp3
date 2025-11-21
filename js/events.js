@@ -6,7 +6,7 @@ import {
     saveLayoutButton, loadLayoutButton, lockCodeInput, unlockCodeInput, openEditStudentsModal,
     saveStudentAttributesFromModal, closeEditStudentsModal, toggleSensitiveInfo,
     toggleFullscreen, announceToScreenReader, lockModal, unlockModal,
-    renderDesks, updateUI
+    renderDesks, updateUI, themeButton, toggleTheme
 } from './ui.js';
 import {
     assignAllAtOnce, resetSession, toggleLock, lockPlacements, unlockPlacements, handleClassroomChange, handleClassChange
@@ -64,6 +64,7 @@ export function setupEventListeners() {
     unlockCancelButton.addEventListener('click', () => unlockModal.classList.add('hidden'));
     saveLayoutButton.addEventListener('click', saveCurrentLayout);
     loadLayoutButton.addEventListener('click', loadSavedLayout);
+    themeButton.addEventListener('click', toggleTheme);
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
