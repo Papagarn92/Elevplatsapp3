@@ -2,10 +2,10 @@ import {
     classroomSelect, classSelect, drawButton, resetButton, editStudentsButton,
     saveStudentsButton, closeEditButton, toggleInfoButton, fullscreenButton,
     exportButton, importButton, importFileInput, lockButton, lockConfirmButton,
-    lockCancelButton, unlockConfirmButton, unlockCancelButton, themeButton,
+    lockCancelButton, unlockConfirmButton, unlockCancelButton,
     saveLayoutButton, loadLayoutButton, lockCodeInput, unlockCodeInput, openEditStudentsModal,
     saveStudentAttributesFromModal, closeEditStudentsModal, toggleSensitiveInfo,
-    toggleFullscreen, toggleTheme, announceToScreenReader, lockModal, unlockModal,
+    toggleFullscreen, announceToScreenReader, lockModal, unlockModal,
     renderDesks, updateUI
 } from './ui.js';
 import {
@@ -62,7 +62,6 @@ export function setupEventListeners() {
     lockCancelButton.addEventListener('click', () => lockModal.classList.add('hidden'));
     unlockConfirmButton.addEventListener('click', unlockPlacements);
     unlockCancelButton.addEventListener('click', () => unlockModal.classList.add('hidden'));
-    themeButton.addEventListener('click', toggleTheme);
     saveLayoutButton.addEventListener('click', saveCurrentLayout);
     loadLayoutButton.addEventListener('click', loadSavedLayout);
 

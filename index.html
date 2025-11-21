@@ -36,49 +36,54 @@
     <script defer src="https://cloud.umami.is/script.js" data-website-id="b412c63a-8bb8-4fbb-a286-323ee1cfbf7e"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Seat Randomizer</h1>
-        <div class="controls">
-            <div class="control-group">
-                <label for="classroomSelect">Sal:</label>
-                <select id="classroomSelect"></select>
-            </div>
+    <header class="app-header">
+        <div class="header-content">
+            <h1>Seat Randomizer</h1>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="classroomSelect">Sal:</label>
+                    <select id="classroomSelect"></select>
+                </div>
 
-            <div id="name-container" class="control-group">
-                <label for="classSelect">Klass:</label>
-                <select id="classSelect"></select>
-            </div>
+                <div id="name-container" class="control-group">
+                    <label for="classSelect">Klass:</label>
+                    <select id="classSelect"></select>
+                </div>
 
-            <div class="control-group">
-                <label for="sortSelect">Sortering:</label>
-                <select id="sortSelect">
-                    <option value="random">Slumpmässig</option>
-                    <option value="alphabetical">Alfabetisk</option>
-                    <option value="performance">Gruppera prestation</option>
-                    <option value="behavior">Gruppera beteende</option>
-                    <option value="attendance">Gruppera närvaro</option>
-                    <option value="smart">Smart placering</option>
-                </select>
-            </div>
+                <div class="control-group">
+                    <label for="sortSelect">Sortering:</label>
+                    <select id="sortSelect">
+                        <option value="random">Slumpmässig</option>
+                        <option value="alphabetical">Alfabetisk</option>
+                        <option value="performance">Gruppera prestation</option>
+                        <option value="behavior">Gruppera beteende</option>
+                        <option value="attendance">Gruppera närvaro</option>
+                        <option value="smart">Smart placering</option>
+                    </select>
+                </div>
 
-            <div class="button-group">
-                <button id="editStudentsButton">Redigera Elever</button>
-                <button id="drawButton">Placera Elever</button>
-                <button id="resetButton">Återställ</button>
-                <button id="lockButton" title="Lås placeringar"><span aria-hidden="true">🔒</span></button>
-                <button id="saveLayoutButton" title="Spara placering"><span aria-hidden="true">💾</span></button>
-                <button id="loadLayoutButton" title="Ladda placering"><span aria-hidden="true">📂</span></button>
-                <button id="exportButton" title="Exportera elevdata"><span aria-hidden="true">📤</span></button>
-                <button id="importButton" title="Importera elevdata"><span aria-hidden="true">📥</span></button>
-                <button id="toggleInfoButton" title="Dölj/visa känslig information"><span aria-hidden="true">👁️</span></button>
-                <button id="themeButton" title="Byt tema"><span aria-hidden="true">🌙</span></button>
-                <button id="fullscreenButton" title="Fullscreen-läge (Shift+F)"><span aria-hidden="true">⛶</span></button>
+                <div class="button-group">
+                    <button id="editStudentsButton">Redigera Elever</button>
+                    <button id="drawButton">Placera Elever</button>
+                    <button id="resetButton">Återställ</button>
+                    <button id="lockButton" title="Lås placeringar"><span aria-hidden="true">🔒</span></button>
+                    <button id="saveLayoutButton" title="Spara placering"><span aria-hidden="true">💾</span></button>
+                    <button id="loadLayoutButton" title="Ladda placering"><span aria-hidden="true">📂</span></button>
+                    <button id="exportButton" title="Exportera elevdata"><span aria-hidden="true">📤</span></button>
+                    <button id="importButton" title="Importera elevdata"><span aria-hidden="true">📥</span></button>
+                    <button id="toggleInfoButton" title="Dölj/visa känslig information"><span aria-hidden="true">👁️</span></button>
+                    <button id="fullscreenButton" title="Fullscreen-läge (Shift+F)"><span aria-hidden="true">⛶</span></button>
+                </div>
+                <input type="file" id="importFileInput" accept=".json" style="display: none;">
             </div>
-            <input type="file" id="importFileInput" accept=".json" style="display: none;">
         </div>
+    </header>
 
-        <div id="classroom-layout"></div>
-    </div>
+    <main>
+        <div class="container">
+            <div id="classroom-layout"></div>
+        </div>
+    </main>
 
     <!-- Modal för bekräftelse -->
     <div id="confirmModal" class="modal hidden">
