@@ -52,7 +52,6 @@ export const lockConfirmButton = document.getElementById('lockConfirmButton');
 export const lockCancelButton = document.getElementById('lockCancelButton');
 export const unlockConfirmButton = document.getElementById('unlockConfirmButton');
 export const unlockCancelButton = document.getElementById('unlockCancelButton');
-export const themeButton = document.getElementById('themeButton');
 export const saveLayoutButton = document.getElementById('saveLayoutButton');
 export const loadLayoutButton = document.getElementById('loadLayoutButton');
 
@@ -271,16 +270,6 @@ export function updateUI() {
         toggleInfoButton.disabled = false;
     }
 
-    // Uppdatera tema-knappen
-    if (themeButton) {
-        if (document.body.classList.contains('dark-theme')) {
-            themeButton.innerHTML = '<span aria-hidden="true">☀️</span>';
-            themeButton.title = 'Byt till ljust tema';
-        } else {
-            themeButton.innerHTML = '<span aria-hidden="true">🌙</span>';
-            themeButton.title = 'Byt till mörkt tema';
-        }
-    }
 }
 
 export function showConfirmModal(message, onConfirm) {
@@ -476,53 +465,4 @@ export function setupKeyboardNavigation() {
         '#toggleInfoButton',
         '#fullscreenButton'
     ];
-}
-
-const themes = ['light', 'dark', 'graphite', 'ocean-blue'];
-const themeIcons = {
-    'light': '🌙',
-    'dark': '☀️',
-    'graphite': '🌑',
-    'ocean-blue': '🌊'
-};
-const themeTitles = {
-    'light': 'Byt till mörkt tema',
-    'dark': 'Byt till grafit-tema',
-    'graphite': 'Byt till havsblått tema',
-    'ocean-blue': 'Byt till ljust tema'
-};
-
-function applyTheme(theme) {
-    const body = document.body;
-    const themeButton = document.getElementById('themeButton');
-
-    // Remove all theme classes
-    themes.forEach(t => body.classList.remove(`${t}-theme`));
-
-    // Add the current theme class (if it's not light)
-    if (theme !== 'light') {
-        body.classList.add(`${theme}-theme`);
-    }
-
-    if (themeButton) {
-        const nextThemeIndex = (themes.indexOf(theme) + 1) % themes.length;
-        const nextTheme = themes[nextThemeIndex];
-        themeButton.innerHTML = `<span aria-hidden="true">${themeIcons[theme]}</span>`;
-        themeButton.title = themeTitles[theme];
-    }
-
-    localStorage.setItem('theme', theme);
-}
-
-export function toggleTheme() {
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    const currentIndex = themes.indexOf(currentTheme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    const nextTheme = themes[nextIndex];
-    applyTheme(nextTheme);
-}
-
-export function loadTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
 }

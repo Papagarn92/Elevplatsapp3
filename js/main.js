@@ -13,8 +13,7 @@ import {
 import {
     populateClassroomSelect,
     populateClassSelect,
-    setupKeyboardNavigation,
-    loadTheme
+    setupKeyboardNavigation
 } from './ui.js';
 import {
     setupEventListeners
@@ -38,9 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Enhanced keyboard navigation
     setupKeyboardNavigation();
-
-    // Ladda tema
-    loadTheme();
 
     // Setup event listeners
     setupEventListeners();
