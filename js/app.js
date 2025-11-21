@@ -6,7 +6,7 @@ import {
     setStudentAttributes, currentClassroom, currentClass
 } from './state.js';
 import { saveData, loadData, loadStudentAttributes, loadLockStatus, getStorageKey } from './data.js';
-import { renderDesks, updateUI, showConfirmModal, lockModal, unlockModal, lockCodeInput, unlockCodeInput, populateClassSelect, classroomSelect, classSelect, nameContainer, classroomLayout, loadTheme, sortSelect } from './ui.js';
+import { renderDesks, updateUI, showConfirmModal, lockModal, unlockModal, lockCodeInput, unlockCodeInput, populateClassSelect, classroomSelect, classSelect, nameContainer, classroomLayout, sortSelect } from './ui.js';
 import { CLASS_LISTS } from './students.js';
 import { CLASSROOM_CONFIG, getSal302Seats } from './classroom.js';
 import { sortStudents, smartPlacement } from './placement.js';
@@ -227,9 +227,6 @@ export function handleClassroomChange() {
     } else {
         classroomLayout.style.gridTemplateRows = '';
     }
-
-    // Återställ till ljust tema när sal ändras (men behåll mörkt tema om användaren har valt det)
-    loadTheme(); // Detta kommer att ladda det sparade temat istället för att återställa till ljust
 
     loadLockStatus(); // Ladda låsstatus när sal ändras
     initializeSession();
