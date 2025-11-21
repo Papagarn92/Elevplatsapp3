@@ -923,6 +923,10 @@ button:focus-visible,
          grid-template-columns: repeat(4, 1fr) 20px repeat(4, 1fr) !important;
          gap: 8px;
     }
+
+    .fullscreen-mode #classroom-layout {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
 }
 
 @media (max-width: 480px) {
