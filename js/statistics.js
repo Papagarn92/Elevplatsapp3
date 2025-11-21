@@ -145,10 +145,44 @@ export function getLeastFrequentNeighbors(className, studentName, limit = 5) {
     return neighbors;
 }
 
+// Spara frånvaro
+export function saveAbsence(className, studentName) {
+    const historyKey = `absenceHistory_${className.replace(/\s+/g, '_')}`;
+    try {
+        let history = JSON.parse(localStorage.getItem(historyKey)) || {};
+        if (!history[studentName]) {
+            history[studentName] = 0;
+        }
+        history[studentName]++;
+        localStorage.setItem(historyKey, JSON.stringify(history));
+        return history[studentName];
+    } catch (e) {
+        console.error('Kunde inte spara frånvaro:', e);
+        return 0;
+    }
+}
+
+// Hämta frånvarostatistik
+export function getAbsenceStatistics(className) {
+    const historyKey = `absenceHistory_${className.replace(/\s+/g, '_')}`;
+    try {
+        return JSON.parse(localStorage.getItem(historyKey)) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+// Rensa frånvarohistorik
+export function clearAbsenceHistory(className) {
+    const historyKey = `absenceHistory_${className.replace(/\s+/g, '_')}`;
+    localStorage.removeItem(historyKey);
+}
+
 // Rensa historik för en klass
 export function clearPlacementHistory(className) {
     const historyKey = `placementHistory_${className.replace(/\s+/g, '_')}`;
     localStorage.removeItem(historyKey);
+    clearAbsenceHistory(className);
 }
 
 // Exportera statistik som JSON
@@ -157,6 +191,7 @@ export function exportStatistics(className) {
     const neighborCount = calculateNeighborStatistics(className);
     const neverNeighbors = findNeverNeighbors(className);
     const averageFrequency = calculateAverageNeighborFrequency(className);
+    const absenceStats = getAbsenceStatistics(className);
     
     const exportData = {
         className,
@@ -166,7 +201,8 @@ export function exportStatistics(className) {
         neighborStatistics: neighborCount,
         neverNeighbors: neverNeighbors,
         placementHistory: history,
-        version: "1.0"
+        absenceStatistics: absenceStats,
+        version: "1.1"
     };
     
     return exportData;
