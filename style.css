@@ -29,6 +29,35 @@
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+.dark-theme {
+    /* Dark Theme Palette */
+    --primary: #60a5fa;        /* Lighter blue for dark mode */
+    --primary-dark: #3b82f6;   /* Bright blue */
+    --primary-light: #93c5fd;  /* Very light blue */
+    --success: #34d399;        /* Lighter emerald */
+    --success-dark: #10b981;   /* Emerald */
+    --warning: #fbbf24;        /* Lighter amber */
+    --danger: #f87171;         /* Lighter red */
+
+    /* Dark Backgrounds */
+    --bg-body: #111827;        /* Very dark gray (almost black) */
+    --bg-surface: #1f2937;     /* Dark gray surface */
+    --bg-secondary: #374151;   /* Medium gray */
+
+    /* Dark Text */
+    --text-primary: #f9fafb;   /* White/Light gray */
+    --text-secondary: #d1d5db; /* Light gray */
+    --text-muted: #9ca3af;     /* Medium gray */
+
+    /* Dark Borders */
+    --border: #374151;         /* Dark gray border */
+
+    /* Dark Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
 body {
     font-family: 'Inter', sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg-body);

@@ -13,7 +13,8 @@ import {
 import {
     populateClassroomSelect,
     populateClassSelect,
-    setupKeyboardNavigation
+    setupKeyboardNavigation,
+    loadTheme
 } from './ui.js';
 import {
     setupEventListeners
@@ -27,6 +28,7 @@ import {
 import { initializeSession } from './app.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadTheme();
     setCurrentClassroom(Object.keys(CLASSROOM_CONFIG)[0]);
     setCurrentClass(Object.keys(CLASS_LISTS)[0]);
     populateClassroomSelect();

@@ -6,7 +6,7 @@ import {
     setStudentAttributes, currentClassroom, currentClass
 } from './state.js';
 import { saveData, loadData, loadStudentAttributes, loadLockStatus, getStorageKey } from './data.js';
-import { renderDesks, updateUI, showConfirmModal, lockModal, unlockModal, lockCodeInput, unlockCodeInput, populateClassSelect, classroomSelect, classSelect, nameContainer, classroomLayout, sortSelect } from './ui.js';
+import { renderDesks, updateUI, showConfirmModal, lockModal, unlockModal, lockCodeInput, unlockCodeInput, populateClassSelect, classroomSelect, classSelect, nameContainer, classroomLayout, sortSelect, loadTheme } from './ui.js';
 import { CLASS_LISTS } from './students.js';
 import { CLASSROOM_CONFIG, getSal302Seats } from './classroom.js';
 import { sortStudents, smartPlacement } from './placement.js';
@@ -214,6 +214,7 @@ export function handleClassroomChange() {
     setCurrentClassroom(selectedSal);
 
     document.body.className = `sal-${selectedSal.replace(/\s+/g, '-')}`;
+    loadTheme(); // Ensure theme is preserved/re-applied
     nameContainer.style.display = config.allows_names ? 'block' : 'none';
 
     if (config.grid_template_columns) {
