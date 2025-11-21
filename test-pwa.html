@@ -413,7 +413,7 @@
                         `${keys.length} resurser tillgängliga offline`);
 
                     // Testa specifikt om viktiga filer är cachade för offline-användning
-                    const importantFiles = ['./index.html', './style.css', './script.js', './manifest.json'];
+                    const importantFiles = ['./index.html', './style.css', './manifest.json'];
                     let offlineReadyCount = 0;
                     for (const file of importantFiles) {
                         const isCached = keys.some(req => req.url.includes(file.replace('./', '')));

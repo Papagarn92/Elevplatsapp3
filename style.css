@@ -214,8 +214,11 @@ h1 {
     display: flex;
     gap: 6px;
     grid-column: 1 / -1;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px;
 }
 
 button {
@@ -224,7 +227,10 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.8rem;
+ feature/typography-and-themes
     font-weight: 500;
+
+
     font-family: 'Inter', sans-serif;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -990,6 +996,10 @@ button:focus-visible,
     .sal-Sal-315 #classroom-layout {
          grid-template-columns: repeat(4, 1fr) 20px repeat(4, 1fr) !important;
          gap: 8px;
+    }
+
+    .fullscreen-mode #classroom-layout {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     }
 }
 
