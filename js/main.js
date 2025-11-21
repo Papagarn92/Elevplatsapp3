@@ -8,7 +8,8 @@ import {
     loadData,
     loadStudentAttributes,
     loadSavedLayouts,
-    loadLockStatus
+    loadLockStatus,
+    loadSessionState
 } from './data.js';
 import {
     populateClassroomSelect,
@@ -29,8 +30,18 @@ import { initializeSession } from './app.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadTheme();
-    setCurrentClassroom(Object.keys(CLASSROOM_CONFIG)[0]);
-    setCurrentClass(Object.keys(CLASS_LISTS)[0]);
+
+    const session = loadSessionState();
+    let initialClassroom = Object.keys(CLASSROOM_CONFIG)[0];
+    let initialClass = Object.keys(CLASS_LISTS)[0];
+
+    if (session && CLASSROOM_CONFIG[session.classroom] && CLASS_LISTS[session.className]) {
+        initialClassroom = session.classroom;
+        initialClass = session.className;
+    }
+
+    setCurrentClassroom(initialClassroom);
+    setCurrentClass(initialClass);
     populateClassroomSelect();
     populateClassSelect();
     loadLockStatus(); // Ladda låsstatus först

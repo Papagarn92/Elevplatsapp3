@@ -5,7 +5,7 @@ import {
     setLockoutUntil, setLockoutLevel, setCurrentClassroom, setCurrentClass, 
     setStudentAttributes, currentClassroom, currentClass, blockedSeats, setBlockedSeats
 } from './state.js';
-import { saveData, loadData, loadStudentAttributes, loadLockStatus, getStorageKey } from './data.js';
+import { saveData, loadData, loadStudentAttributes, loadLockStatus, getStorageKey, saveSessionState } from './data.js';
 import { renderDesks, updateUI, showConfirmModal, lockModal, unlockModal, lockCodeInput, unlockCodeInput, populateClassSelect, classroomSelect, classSelect, nameContainer, classroomLayout, sortSelect, loadTheme } from './ui.js';
 import { CLASS_LISTS } from './students.js';
 import { CLASSROOM_CONFIG, getSal302Seats } from './classroom.js';
@@ -220,6 +220,7 @@ export function handleClassroomChange() {
     const config = CLASSROOM_CONFIG[selectedSal];
     if (!config) return;
     setCurrentClassroom(selectedSal);
+    saveSessionState(selectedSal, currentClass);
 
     document.body.className = `sal-${selectedSal.replace(/\s+/g, '-')}`;
     loadTheme(); // Ensure theme is preserved/re-applied
@@ -243,6 +244,7 @@ export function handleClassroomChange() {
 
 export function handleClassChange() {
     setCurrentClass(classSelect.value);
+    saveSessionState(currentClassroom, classSelect.value);
     setStudentAttributes(loadStudentAttributes(currentClass));
     initializeSession();
 }
