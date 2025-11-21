@@ -15,10 +15,6 @@
     <!-- Preload critical resources for better performance -->
     <link rel="preload" href="style.css" as="style">
     <link rel="preload" href="js/main.js" as="script">
-    <link rel="preload" href="manifest.json" as="fetch">
-    <link rel="preload" href="icon-192.png" as="image">
-    <link rel="preload" href="icon-512.png" as="image">
-    <link rel="preload" href="apple-touch-icon.png" as="image">
     <link rel="preload" href="service-worker.js" as="script">
     <link rel="preload" href="sw-register.js" as="script">
 
@@ -66,14 +62,14 @@
                     <button id="editStudentsButton">Redigera Elever</button>
                     <button id="drawButton">Placera Elever</button>
                     <button id="resetButton">Återställ</button>
-                    <button id="lockButton" title="Lås placeringar"><span aria-hidden="true">🔒</span></button>
-                    <button id="saveLayoutButton" title="Spara placering"><span aria-hidden="true">💾</span></button>
-                    <button id="loadLayoutButton" title="Ladda placering"><span aria-hidden="true">📂</span></button>
-                    <button id="exportButton" title="Exportera elevdata"><span aria-hidden="true">📤</span></button>
-                    <button id="importButton" title="Importera elevdata"><span aria-hidden="true">📥</span></button>
-                    <button id="toggleInfoButton" title="Dölj/visa känslig information"><span aria-hidden="true">👁️</span></button>
-                    <button id="themeButton" title="Byt tema (Ljust/Mörkt)"><span aria-hidden="true">🌓</span></button>
-                    <button id="fullscreenButton" title="Fullscreen-läge (Shift+F)"><span aria-hidden="true">⛶</span></button>
+                    <button id="lockButton" title="Lås placeringar" aria-label="Lås placeringar"><span aria-hidden="true">🔒</span></button>
+                    <button id="saveLayoutButton" title="Spara placering" aria-label="Spara placering"><span aria-hidden="true">💾</span></button>
+                    <button id="loadLayoutButton" title="Ladda placering" aria-label="Ladda placering"><span aria-hidden="true">📂</span></button>
+                    <button id="exportButton" title="Exportera elevdata" aria-label="Exportera elevdata"><span aria-hidden="true">📤</span></button>
+                    <button id="importButton" title="Importera elevdata" aria-label="Importera elevdata"><span aria-hidden="true">📥</span></button>
+                    <button id="toggleInfoButton" title="Dölj/visa känslig information" aria-label="Växla känslig information"><span aria-hidden="true">👁️</span></button>
+                    <button id="themeButton" title="Byt tema (Ljust/Mörkt)" aria-label="Byt tema"><span aria-hidden="true">🌓</span></button>
+                    <button id="fullscreenButton" title="Fullscreen-läge (Shift+F)" aria-label="Växla helskärmsläge"><span aria-hidden="true">⛶</span></button>
                 </div>
                 <input type="file" id="importFileInput" accept=".json" style="display: none;">
             </div>

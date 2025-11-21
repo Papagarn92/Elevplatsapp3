@@ -86,6 +86,9 @@ export function populateClassroomSelect() {
         option.textContent = name;
         classroomSelect.appendChild(option);
     }
+    if (currentClassroom && CLASSROOM_CONFIG[currentClassroom]) {
+        classroomSelect.value = currentClassroom;
+    }
 }
 export function populateClassSelect() {
     classSelect.innerHTML = '';

@@ -22,6 +22,26 @@ import {
 import { renderDesks, updateUI, sortSelect, importFileInput } from './ui.js';
 
 const STORAGE_KEY_PREFIX = 'elevPlatser_';
+const SESSION_KEY = 'seatRandomizerSession';
+
+export function saveSessionState(classroom, className) {
+    try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+            classroom,
+            className
+        }));
+    } catch (e) {
+        console.error("Kunde inte spara sessionsdata", e);
+    }
+}
+
+export function loadSessionState() {
+    try {
+        return JSON.parse(localStorage.getItem(SESSION_KEY));
+    } catch (e) {
+        return null;
+    }
+}
 
 export function getStorageKey(currentClassroom, currentClass) {
     return `${STORAGE_KEY_PREFIX}${currentClassroom.replace(/\s+/g, '_')}_${currentClass.replace(/\s+/g, '_')}`;
