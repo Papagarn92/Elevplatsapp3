@@ -214,8 +214,11 @@ h1 {
     display: flex;
     gap: 6px;
     grid-column: 1 / -1;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px;
 }
 
 button {
@@ -224,7 +227,14 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.8rem;
+<<<<<< fix-mobile-fullscreen-layout
     font-weight: 500;
+=======
+ feature/typography-and-themes
+    font-weight: 500;
+
+
+    main
     font-family: 'Inter', sans-serif;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -821,6 +831,74 @@ button:focus-visible,
 }
 
 /* =========================================== */
+/* === GRAFIT TEMA === */
+/* =========================================== */
+.graphite-theme {
+    --primary: #a78bfa;
+    --primary-dark: #8b5cf6;
+    --primary-light: #c4b5fd;
+    --success: #4ade80;
+    --success-dark: #22c55e;
+    --success-light: #86efac;
+    --warning: #facc15;
+    --danger: #fb7185;
+    --info: #38bdf8;
+
+    --bg-primary: #1f2937;
+    --bg-secondary: #374151;
+    --bg-tertiary: #4b5563;
+    --bg-accent: #111827;
+
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+
+    --border: #4b5563;
+    --border-light: #374151;
+}
+
+.graphite-theme body {
+    background:
+        radial-gradient(circle at 25% 75%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(74, 222, 128, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #111827 0%, #1f2937 100%);
+}
+
+/* =========================================== */
+/* === HAVSBLÅTT TEMA === */
+/* =========================================== */
+.ocean-blue-theme {
+    --primary: #60a5fa;
+    --primary-dark: #3b82f6;
+    --primary-light: #93c5fd;
+    --success: #2dd4bf;
+    --success-dark: #14b8a6;
+    --success-light: #5eead4;
+    --warning: #f59e0b;
+    --danger: #f472b6;
+    --info: #06b6d4;
+
+    --bg-primary: #0c1422;
+    --bg-secondary: #1a2a40;
+    --bg-tertiary: #2d4261;
+    --bg-accent: #0f172a;
+
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    --border: #2d4261;
+    --border-light: #1a2a40;
+}
+
+.ocean-blue-theme body {
+    background:
+        radial-gradient(circle at 25% 75%, rgba(96, 165, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(45, 212, 191, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #0f172a 0%, #0c1422 100%);
+}
+
+/* =========================================== */
 /* === RESPONSIV DESIGN FÖR MOBILA ENHETER === */
 /* =========================================== */
 @media (max-width: 768px) {
@@ -925,6 +1003,10 @@ button:focus-visible,
     .sal-Sal-315 #classroom-layout {
          grid-template-columns: repeat(4, 1fr) 20px repeat(4, 1fr) !important;
          gap: 8px;
+    }
+
+    .fullscreen-mode #classroom-layout {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     }
 }
 
