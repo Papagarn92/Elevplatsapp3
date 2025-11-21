@@ -7,6 +7,8 @@ import {
 } from './students.js';
 import {
     assignments,
+    blockedSeats,
+    toggleBlockedSeat,
     studentAttributes,
     sensitiveInfoVisible,
     isLocked,
@@ -20,7 +22,8 @@ import {
 import {
     loadData,
     loadStudentAttributes,
-    saveStudentAttributes
+    saveStudentAttributes,
+    saveData
 } from './data.js';
 import {
     initializeSession
@@ -161,8 +164,36 @@ export function renderDesks() {
         desk.className = 'desk';
         desk.id = `desk-${deskInfo.id}`;
 
+        // Hantera blockerade platser
+        const isBlocked = blockedSeats.has(deskInfo.id);
+        if (isBlocked) {
+            desk.classList.add('blocked-seat');
+        }
+
+        // Lägg till klickhanterare för att toggla blockering
+        desk.addEventListener('click', () => {
+            if (!isLocked) { // Tillåt bara ändringar om inte låst
+                toggleBlockedSeat(deskInfo.id);
+
+                // Spara ändringar direkt så att blockeringar minns vid omladdning
+                saveData(currentClassroom, currentClass, {
+                    assignments: assignments,
+                    blockedSeats: Array.from(blockedSeats)
+                });
+
+                // Vi renderar om för att visa ändringen
+                renderDesks();
+            }
+        });
+
         const assignment = assignments[deskInfo.id];
-        if (typeof assignment === 'string') {
+        // Visa eleven endast om platsen inte är blockerad ELLER om vi vill visa att eleven sitter på en nu blockerad plats
+        // För tydlighetens skull: Om blockerad, visa "Blockerad" text eller liknande, men CSS fixar färgen.
+        // Om det finns en assignment men platsen är blockerad, visar vi assignment ändå?
+        // Användarens önskemål: "bänken ... blir då röda istället".
+        // Om vi visar assignment på röd bakgrund ser det ut som en felaktig placering.
+
+        if (typeof assignment === 'string' && !isBlocked) {
             const nameDiv = document.createElement('div');
             nameDiv.textContent = assignment;
             desk.appendChild(nameDiv);
@@ -205,6 +236,16 @@ export function renderDesks() {
             desk.classList.add('drawn');
         } else {
             desk.textContent = `Plats ${deskInfo.id}`;
+
+            // Lägg till en visuell indikation om den är blockerad
+            if (isBlocked) {
+                desk.innerHTML = `🚫<br><span style="font-size: 0.8em">Blockerad</span>`;
+                desk.style.cursor = 'pointer';
+                desk.title = "Klicka för att avblockera";
+            } else {
+                desk.style.cursor = 'pointer';
+                desk.title = "Klicka för att blockera denna plats";
+            }
         }
 
         if (deskInfo.row) desk.style.gridRow = deskInfo.row;
