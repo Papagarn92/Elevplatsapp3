@@ -5,7 +5,8 @@ import {
     findNeverNeighbors,
     calculateAverageNeighborFrequency,
     clearPlacementHistory,
-    exportStatistics
+    exportStatistics,
+    getAbsenceStatistics
 } from './statistics.js';
 
 // Admin lösenordshantering
@@ -55,6 +56,7 @@ const heatmapGrid = document.getElementById('heatmapGrid');
 const statsTableBody = document.getElementById('statsTableBody');
 const neverNeighborsList = document.getElementById('neverNeighborsList');
 const historyTableBody = document.getElementById('historyTableBody');
+const absenceTableBody = document.getElementById('absenceTableBody');
 
 let currentClass = '';
 
@@ -155,6 +157,7 @@ function updateStatistics() {
     const neighborStats = calculateNeighborStatistics(currentClass);
     const neverNeighbors = findNeverNeighbors(currentClass);
     const avgFreq = calculateAverageNeighborFrequency(currentClass);
+    const absenceStats = getAbsenceStatistics(currentClass);
     
     // Uppdatera översiktskort
     totalPlacements.textContent = history.length;
@@ -169,9 +172,37 @@ function updateStatistics() {
     
     // Uppdatera "aldrig grannar"-lista
     renderNeverNeighbors(neverNeighbors);
+
+    // Uppdatera frånvaro
+    renderAbsenceStats(absenceStats);
     
     // Uppdatera historik
     renderHistory(history);
+}
+
+// Rendera frånvarostatistik
+function renderAbsenceStats(absenceStats) {
+    absenceTableBody.innerHTML = '';
+
+    const entries = Object.entries(absenceStats);
+    if (entries.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="2" style="text-align: center; color: var(--text-muted);">Ingen frånvaro registrerad</td>';
+        absenceTableBody.appendChild(row);
+        return;
+    }
+
+    // Sortera efter mest frånvaro
+    entries.sort((a, b) => b[1] - a[1]);
+
+    entries.forEach(([student, count]) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${student}</td>
+            <td><strong>${count}</strong></td>
+        `;
+        absenceTableBody.appendChild(row);
+    });
 }
 
 // Rendera heatmap

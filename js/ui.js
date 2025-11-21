@@ -25,6 +25,7 @@ import {
     saveStudentAttributes,
     saveData
 } from './data.js';
+import { saveAbsence } from './statistics.js';
 import {
     initializeSession
 } from './app.js';
@@ -171,8 +172,32 @@ export function renderDesks() {
         }
 
         // Lägg till klickhanterare för att toggla blockering
-        desk.addEventListener('click', () => {
+        desk.addEventListener('click', (e) => {
             if (!isLocked) { // Tillåt bara ändringar om inte låst
+
+                // Hantera Ctrl+Klick för frånvaro
+                if ((e.ctrlKey || e.metaKey) && assignments[deskInfo.id] && !isBlocked) {
+                    const studentName = assignments[deskInfo.id];
+                    if (confirm(`Markera ${studentName} som frånvarande?`)) {
+                        saveAbsence(currentClass, studentName);
+
+                        // Visuell indikation
+                        desk.classList.add('student-absent');
+
+                        // Lägg till en liten varningsikon för frånvaro om den inte finns
+                        if (!desk.querySelector('.absence-badge')) {
+                             const badge = document.createElement('div');
+                             badge.textContent = '⚠️ Frånvarande';
+                             badge.className = 'absence-badge';
+                             badge.style.cssText = 'color: #b91c1c; font-size: 0.75rem; font-weight: bold; margin-top: 4px; background: #fee2e2; padding: 2px 6px; border-radius: 4px;';
+                             desk.appendChild(badge);
+                        }
+
+                        announceToScreenReader(`${studentName} markerad som frånvarande.`);
+                    }
+                    return; // Avbryt så vi inte togglar blockering
+                }
+
                 toggleBlockedSeat(deskInfo.id);
 
                 // Spara ändringar direkt så att blockeringar minns vid omladdning
