@@ -478,55 +478,51 @@ export function setupKeyboardNavigation() {
     ];
 }
 
-export function toggleTheme() {
+const themes = ['light', 'dark', 'graphite', 'ocean-blue'];
+const themeIcons = {
+    'light': '🌙',
+    'dark': '☀️',
+    'graphite': '🌑',
+    'ocean-blue': '🌊'
+};
+const themeTitles = {
+    'light': 'Byt till mörkt tema',
+    'dark': 'Byt till grafit-tema',
+    'graphite': 'Byt till havsblått tema',
+    'ocean-blue': 'Byt till ljust tema'
+};
+
+function applyTheme(theme) {
     const body = document.body;
     const themeButton = document.getElementById('themeButton');
 
-    if (body.classList.contains('dark-theme')) {
-        // Switch to light theme
-        body.classList.remove('dark-theme');
-        themeButton.innerHTML = '<span aria-hidden="true">🌙</span>';
-        themeButton.title = 'Byt till mörkt tema';
-        localStorage.setItem('theme', 'light');
-    } else {
-        // Switch to dark theme
-        body.classList.add('dark-theme');
-        themeButton.innerHTML = '<span aria-hidden="true">☀️</span>';
-        themeButton.title = 'Byt till ljust tema';
-        localStorage.setItem('theme', 'dark');
+    // Remove all theme classes
+    themes.forEach(t => body.classList.remove(`${t}-theme`));
+
+    // Add the current theme class (if it's not light)
+    if (theme !== 'light') {
+        body.classList.add(`${theme}-theme`);
     }
+
+    if (themeButton) {
+        const nextThemeIndex = (themes.indexOf(theme) + 1) % themes.length;
+        const nextTheme = themes[nextThemeIndex];
+        themeButton.innerHTML = `<span aria-hidden="true">${themeIcons[theme]}</span>`;
+        themeButton.title = themeTitles[theme];
+    }
+
+    localStorage.setItem('theme', theme);
+}
+
+export function toggleTheme() {
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    const currentIndex = themes.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    const nextTheme = themes[nextIndex];
+    applyTheme(nextTheme);
 }
 
 export function loadTheme() {
-
-    const savedTheme = localStorage.getItem('theme');
-
-    const themeButton = document.getElementById('themeButton');
-
-
-
-    if (savedTheme === 'dark') {
-
-        document.body.classList.add('dark-theme');
-
-        if (themeButton) {
-
-            themeButton.innerHTML = '<span aria-hidden="true">☀️</span>';
-
-            themeButton.title = 'Byt till ljust tema';
-
-        }
-
-    } else {
-
-        if (themeButton) {
-
-            themeButton.innerHTML = '<span aria-hidden="true">🌙</span>';
-
-            themeButton.title = 'Byt till mörkt tema';
-
-        }
-
-    }
-
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
 }
