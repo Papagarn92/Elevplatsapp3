@@ -25,3 +25,6 @@ Thumbs.db
 # Backup-filer
 *.bak
 *.backup
+
+# Loggfiler
+server.log
